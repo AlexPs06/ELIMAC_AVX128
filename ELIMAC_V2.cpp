@@ -220,8 +220,8 @@ void ELIMAC(unsigned char *K_1, unsigned char *K_2, unsigned char *M, int size, 
     AES_128_Key_Expansion(K_2, keys_128_k_2);
 
     nonce = _mm_set_epi64x(0,0);
-    size_t i=0;
-    for (i = 0; i < m_blocks-1; i++){
+    
+    for (size_t i = 0; i < m_blocks; i++){
 
         nonce_temp[0]=nonce; 
         
@@ -237,10 +237,9 @@ void ELIMAC(unsigned char *K_1, unsigned char *K_2, unsigned char *M, int size, 
     }
 
 
-    S=_mm_xor_si128(plain_text[i],S);
-    Tag=_mm_xor_si128(Tag,S);
     
-	AES_encrypt(Tag, &Tag, keys_128_k_2, 10);
+    Tag=_mm_xor_si128(Tag,S);
+    AES_encrypt(Tag, &Tag, keys_128_k_2, 10);
 	_mm_store_si128 ((__m128i*)T,Tag);
 }
 
