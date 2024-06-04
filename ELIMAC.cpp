@@ -45,7 +45,7 @@ static void imprimiArreglo(int tam, unsigned char *in );
 //     ALIGN(16) unsigned char K_1[16 ]={ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
 //     ALIGN(16) unsigned char K_2[16 ]={ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
 
-//     ELIMAC(K_1, K_2, plaintext, 128, tag);
+//     ELIMAC(K_1, K_2, plaintext,  128, tag);
 
 //     printf("\n");
 //     imprimiArreglo(16, tag);
@@ -225,17 +225,18 @@ void ELIMAC(unsigned char *K_1, unsigned char *K_2, unsigned char *M, int size, 
 
         nonce_temp[0]=nonce; 
         
-        H(nonce_temp,  keys_128, 6, pipeline);
+        H(nonce_temp,  keys_128, 7, pipeline);
         
         plain_text[i]=_mm_xor_si128(plain_text[i],nonce_temp[0]);
         
         I(&plain_text[i],  keys_0, 4,pipeline);
 
+		// imprimiArreglo(16,(unsigned char*)&S[0] );
+
         S=_mm_xor_si128(plain_text[i],S);
         nonce=_mm_add_epi64(nonce, sum_nonce);
 
     }
-
 
     S=_mm_xor_si128(plain_text[i],S);
     Tag=_mm_xor_si128(Tag,S);
